@@ -5,10 +5,10 @@ from django.db import models
 
 class Aluno (models.Model):
     nomeUsuario = models.ForeignKey (User)
-    matricula = models.IntegerField(max_length=300)
+    matricula = models.IntegerField()
 
 class Atendente (models.Model):
-    nomeUsuario = models.CharField (User)
+    nomeUsuario = models.ForeignKey(User)
 
 class TipoDocumento (models.Model):
     descricao = models.CharField(max_length=100)
@@ -24,7 +24,7 @@ class StatusDocumento (models.Model):
 
 class Servico (models.Model):
     documento = models.ForeignKey(Documentos)
-    aluno = models.ForeignKey(Aluno.matricula)
+    aluno = models.ForeignKey(Aluno)
     status = models.ForeignKey(StatusDocumento)
 
 
