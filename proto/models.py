@@ -2,6 +2,10 @@ from django.contrib.auth.models import User, Group
 from django.db import models
 # -*- coding: utf-8 -*-
 from django.db import models
+from django.db.models.fields import DateField
+from django.db.models.sql.datastructures import Date
+from datetime import datetime, timedelta
+
 
 class Aluno (models.Model):
     nomeUsuario = models.ForeignKey(User, related_name='Nome Usuário', verbose_name='Nome Usuário')
@@ -17,6 +21,9 @@ class Aluno (models.Model):
 class Atendente (models.Model):
     grupo = models.ForeignKey(Group, related_name='Grupo')
     nomeUsuario = models.ForeignKey(User, verbose_name='Nome Usuário', related_name='Nome Usuario')
+
+    def __str__(self):
+        return 'Atendente: {0} '.format(self.nomeUsuario)
 
     class Meta:
         verbose_name = 'Atendente'
@@ -35,12 +42,17 @@ class TipoDocumento (models.Model):
 class Documentos (models.Model):
     tipoDocumento = models.ForeignKey(TipoDocumento, verbose_name='Tipo Documento', related_name='Tipo Documento')
     preco = models.FloatField(max_length=6, verbose_name='Preço')
-    tempo = models.TimeField(verbose_name='Tempo')
+    tempo = models.IntegerField(verbose_name='Número de Dias')
     descricao = models.CharField(max_length=2000, verbose_name='Descrição')
+
+
+    def __str__(self):
+        return 'Documento: {0}'.format(self.tipoDocumento)
 
     class Meta:
         verbose_name = 'Documento'
         verbose_name_plural = 'Documentos'
+
 
 class StatusDocumento (models.Model):
     status = models.CharField(max_length=25, verbose_name='Status')
@@ -56,9 +68,9 @@ class Servico (models.Model):
     documento = models.ForeignKey(Documentos, related_name='Documento', verbose_name='Documento')
     aluno = models.ForeignKey(Aluno, related_name='Aluno', verbose_name='Aluno')
     status = models.ForeignKey(StatusDocumento, related_name='Status', verbose_name='Status')
+    dataSolicitada = models.DateField(verbose_name='Data Solicitada', default= datetime.today())
+    dataEntrega = models.DateField(verbose_name='Data de Entrega', default= datetime.today())
 
     class Meta:
         verbose_name = 'Serviço'
         verbose_name_plural = 'Serviços'
-
-

@@ -1,3 +1,4 @@
+from datetime import datetime, timedelta
 from django.contrib import admin
 from proto.models import Aluno, Atendente, TipoDocumento, Documentos, StatusDocumento, Servico
 
@@ -13,11 +14,19 @@ class TipoDocumentoAdmin(admin.ModelAdmin):
 class DocumentosAdmin(admin.ModelAdmin):
     list_display = ('tipoDocumento', 'preco', 'tempo', 'descricao')
 
+
 class StatusDocumentoAdmin(admin.ModelAdmin):
     list_display = ['status']
 
 class ServicoAdmin(admin.ModelAdmin):
-    list_display = ('documento', 'aluno', 'status')
+    list_display = ('documento', 'aluno', 'status', 'dataSolicitada', 'dataEntrega')
+    readonly_fields = ('dataSolicitada', 'dataEntrega')
+
+    def save_model(self, request, obj, form, change):
+        obj.aluno = request.user
+        obj.save()
+
+
 
 admin.site.register(Aluno, AlunoAdmin)
 admin.site.register(Atendente, AtendenteAdmin)
